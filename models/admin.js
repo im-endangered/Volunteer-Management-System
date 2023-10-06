@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const volunteerSchema = mongoose.Schema({
+const adminSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
   email: {
     type: String,
-    required: true,
+    required: true, //email is to be verified through express validators
     unique: true,
   },
   password: {
@@ -14,7 +14,5 @@ const volunteerSchema = mongoose.Schema({
     required: true,
   },
 });
-
-const Volunteers = mongoose.model("Volunteers", volunteerSchema);
-
-module.exports = User;
+const Admin = mongoose.model("Admin", adminSchema);
+module.exports = Admin;
