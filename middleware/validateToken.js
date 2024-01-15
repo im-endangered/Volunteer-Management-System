@@ -10,7 +10,7 @@ const validateToken = (req, res, next) => {
       if (err) {
         console.log(err);
         res.status(401);
-        throw new Error("User is unauthenticated");
+        throw new Error("User is not authenticated");
       }
     });
   } else {
