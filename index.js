@@ -12,6 +12,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/admin", require("./routes/adminRoutes"));
+app.use("/volunteer", require("./routes/volunteerRoutes"));
 
 // app.use("/api/volunteers", require("./routes/volunteerRoutes"));
 
