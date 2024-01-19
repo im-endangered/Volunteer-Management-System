@@ -18,4 +18,6 @@ const login = asyncHandler(async (req, res) => {
   }
 });
 
+const changePassword = asyncHandler(async (req, res) => {});
+
 module.exports = { login };

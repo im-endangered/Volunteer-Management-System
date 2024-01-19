@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const validateToken = (req, res, next) => {
+const validateToken = (requiredRole) => (req, res, next) => {
   const authHeader = req.headers.authenticate || req.headers.Authenticate;
 
   let token;
@@ -12,11 +12,19 @@ const validateToken = (req, res, next) => {
         res.status(401);
         throw new Error("User is not authenticated");
       }
+      if (requiredRole && decoded.role !== requiredRole) {
+        res.status(403);
+        throw new Error("Insufficient permissions");
+      }
+
+      // Attach the decoded user information to the request for future use
+      req.user = decoded;
     });
   } else {
     res.status(401);
     throw new Error("Unauthorized");
   }
+
   next();
 };
 

@@ -1,5 +1,5 @@
 const express = require("express");
-
+const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const Admin = require("../models/admin");
 const Volunteer = require("../models/volunteers");
@@ -12,12 +12,16 @@ const createAdmin = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("All fields are required");
   } else {
+    const hashPassword = await bcrypt.hash(password, 10);
+    console.log(hashPassword);
     const newAdmin = await Admin.create({
       name: username,
       email,
-      password,
+      password: hashPassword,
     });
-    res.status(201).json(newAdmin);
+    res
+      .status(201)
+      .json({ "username:": newAdmin.name, "email:": newAdmin.email });
   }
 });
 //@desc Delete an admin
@@ -42,12 +46,14 @@ const createUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("All fields are required");
   } else {
+    const hashPassword = await bcrypt.hash(password, 10);
+
     const volunteer = await Volunteer.create({
       name,
       email,
-      password,
+      password: hashPassword,
     });
-    res.status(201).json(volunteer);
+    res.status(201).json({ name: volunteer.name, email: volunteer.email });
   }
 });
 
@@ -62,7 +68,7 @@ const listVolunteers = asyncHandler(async (req, res) => {
     res.json(users);
   }
 });
-//@desc Delete an users
+//@desc Delete an user
 //@route DELETE /admin/deleteUser/:email
 //@access private
 const deleteVolunteer = asyncHandler(async (req, res) => {
@@ -74,7 +80,9 @@ const deleteVolunteer = asyncHandler(async (req, res) => {
     throw new Error("Volunteer not found");
   } else {
     await Volunteer.findByIdAndDelete(volunteerToDelete._id);
-    res.status(200).json(volunteerToDelete);
+    res
+      .status(200)
+      .json({ success: true, userDeleted: volunteerToDelete.name });
   }
 });
 
